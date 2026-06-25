@@ -79,30 +79,39 @@ only if cursor movement, selection, copy/paste, undo/redo, and deletion remain s
 - expose and document a strict line break mode comparable to Obsidian's editor behavior
 - make `Shift+Enter` clearly insert a hard line break inside paragraphs and lists
 - improve visual distinction between soft line continuation and paragraph breaks in Live Preview
+- preserve or intentionally normalize repeated spaces and blank lines consistently between editor and Reading Preview
+- review support for whitespace-preserving HTML helpers such as `&nbsp;` and `<br>` where they are commonly used in Markdown notes
 
 [] List editing improvements:
 - make nested ordered, unordered, and task lists more visually obvious in Live Preview
 - improve `Tab` / `Shift+Tab` handling for indent and unindent of selected list items
 - preserve numbering behavior cleanly when inserting line breaks inside ordered lists
+- support ordered-list markers using both `1.` and `1)` forms
 - support non-`x` task markers such as `[-]` and `[?]` with sensible visual treatment
+- consider safe checkbox toggling in Reading Preview without changing editor semantics
 
 [] Inline code and fenced code improvements:
 - support double-backtick inline code spans for content containing literal backticks
 - style fenced code blocks created with backticks or tildes
 - detect and style fenced language identifiers more clearly
+- improve fenced language-name handling for syntax-highlighted Reading Preview output
 - handle nested fenced code blocks safely in Source mode and Live Preview
 - distinguish indented code blocks from normal indented text
 
 [] Link and embed improvements:
 - improve Markdown links to local files with spaces, including `<...>` URL wrapping
 - support visual handling for external image syntax and image size hints such as `![alt|100x145](url)`
+- support width-only image size hints such as `![alt|100](url)`
 - support block-reference style links and embeds such as `![[Link#^id]]`
 - support internal block definition markers such as `^id`
+- improve plain Markdown links to relative note paths with `%20` escaping
+- keep external URI handling scoped to generic Markdown/URL behavior, excluding Vault-specific navigation
 
 [] Footnotes:
 - detect footnote references like `[^1]` and named footnotes like `[^note]`
 - style footnote definition blocks
 - support inline footnotes such as `^[text]` in Reading Preview and provide safe editor styling
+- support multiline footnote definitions with indented continuation lines
 
 [] Comments:
 - distinguish inline and multiline `%% comment %%` blocks more clearly in Live Preview
@@ -130,6 +139,7 @@ only if cursor movement, selection, copy/paste, undo/redo, and deletion remain s
 [] Diagrams and math:
 - style Mermaid fenced blocks as first-class diagram blocks in Live Preview
 - detect Mermaid internal-link classes without trying to fully render diagrams in the editor
+- account for common Mermaid diagram families such as flowcharts, sequence diagrams, and timelines in Reading Preview expectations
 - improve inline math `$...$` styling in Live Preview
 - improve block math `$$...$$` styling in Live Preview
 
@@ -152,6 +162,7 @@ only if cursor movement, selection, copy/paste, undo/redo, and deletion remain s
   Source-only
   Live Preview styled
   Reading Preview rendered
+- document and test the rule that Markdown inside raw HTML blocks is not interpreted, if Markor keeps that behavior for compatibility/performance
 
 [] Toolbar and command improvements for Live Preview workflows
 
