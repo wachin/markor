@@ -53,6 +53,14 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="document_editor_font">Document Editor Font</string>
     <string name="theme">Theme</string>
     <string name="open_existing_files_in_view_mode">Open existing files in view mode</string>
+    <string name="markdown_editing_mode">Markdown editing mode</string>
+    <string name="live_preview">Live Preview</string>
+    <string name="source_mode">Source mode</string>
+    <string name="reading_preview">Reading preview</string>
+    <string name="live_preview_syntax_markers">Live Preview syntax markers</string>
+    <string name="show">Show</string>
+    <string name="dim">Dim</string>
+    <string name="hide_experimental">Hide experimental</string>
     <string name="about">About</string>
     <string name="plaintext">Plain Text</string>
     <string name="file">File</string>

@@ -115,6 +115,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
         Preference keys
      -->
     <string name="pref_key__markdown__hl_delay_v2" translatable="false">pref_key__markdown__hl_delay_v2</string>
+    <string name="pref_key__markdown__editing_mode" translatable="false">pref_key__markdown__editing_mode</string>
+    <string name="pref_key__markdown__live_preview_syntax_markers" translatable="false">pref_key__markdown__live_preview_syntax_markers</string>
     <string name="pref_key__asciidoc__hl_delay" translatable="false">pref_key__asciidoc__hl_delay</string>
     <string name="pref_key__orgmode__hl_delay" translatable="false">pref_key__orgmode__hl_delay</string>
     <string name="pref_key__quicknote_filepath" translatable="false">pref_key__quicknote_filepath</string>

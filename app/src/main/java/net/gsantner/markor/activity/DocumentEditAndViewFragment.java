@@ -378,6 +378,9 @@ public class DocumentEditAndViewFragment extends MarkorBaseFragment implements F
         menu.findItem(R.id.submenu_share).setVisible(isText);
         menu.findItem(R.id.submenu_tools).setVisible(isText);
         menu.findItem(R.id.submenu_per_file_settings).setVisible(isText);
+        final boolean isMarkdown = _document.getFormat() == FormatRegistry.FORMAT_MARKDOWN;
+        menu.findItem(R.id.action_markdown_live_preview).setVisible(isText && isMarkdown && !_isPreviewVisible);
+        menu.findItem(R.id.action_preview).setTitle(isMarkdown ? R.string.reading_preview : R.string.view_mode);
 
         menu.findItem(R.id.action_share_pdf).setVisible(true);
         menu.findItem(R.id.action_share_image).setVisible(true);
@@ -718,6 +721,13 @@ public class DocumentEditAndViewFragment extends MarkorBaseFragment implements F
                 updateMenuToggleStates(0);
                 return true;
             }
+            case R.id.action_markdown_live_preview: {
+                final boolean enabled = !_appSettings.isMarkdownLivePreviewEnabled();
+                _appSettings.setMarkdownLivePreviewEnabled(enabled);
+                applyTextFormat(_document.getFormat());
+                updateMenuToggleStates(0);
+                return true;
+            }
             case R.id.action_info: {
                 if (saveDocument(false)) { // In order to have the correct info displayed
                     FileInfoDialog.show(_document.file, getParentFragmentManager());
@@ -1009,6 +1019,14 @@ public class DocumentEditAndViewFragment extends MarkorBaseFragment implements F
         }
         if ((mi = _fragmentMenu.findItem(R.id.action_enable_auto_format)) != null) {
             mi.setChecked(_hlEditor.getAutoFormatEnabled());
+        }
+        if ((mi = _fragmentMenu.findItem(R.id.action_markdown_live_preview)) != null) {
+            final boolean isMarkdown = _document != null && _document.getFormat() == FormatRegistry.FORMAT_MARKDOWN;
+            mi.setVisible(isMarkdown && !_isPreviewVisible);
+            mi.setChecked(isMarkdown && _appSettings.isMarkdownLivePreviewEnabled());
+        }
+        if ((mi = _fragmentMenu.findItem(R.id.action_preview)) != null) {
+            mi.setTitle(_document != null && _document.getFormat() == FormatRegistry.FORMAT_MARKDOWN ? R.string.reading_preview : R.string.view_mode);
         }
 
         final SubMenu su;

@@ -461,6 +461,22 @@
             android:title="@string/markdown">
 
             <PreferenceCategory android:title="@string/syntax_highlighting">
+                <ListPreference
+                    android:defaultValue="1"
+                    android:entries="@array/pref_arrdisp__markdown_editing_mode"
+                    android:entryValues="@array/pref_arrkeys__markdown_editing_mode"
+                    android:icon="@drawable/ic_edit_black_24dp"
+                    android:key="@string/pref_key__markdown__editing_mode"
+                    android:title="@string/markdown_editing_mode"
+                    app:useSimpleSummaryProvider="true" />
+                <ListPreference
+                    android:defaultValue="1"
+                    android:entries="@array/pref_arrdisp__markdown_live_preview_syntax_markers"
+                    android:entryValues="@array/pref_arrkeys__markdown_live_preview_syntax_markers"
+                    android:icon="@drawable/ic_visibility_black_24dp"
+                    android:key="@string/pref_key__markdown__live_preview_syntax_markers"
+                    android:title="@string/live_preview_syntax_markers"
+                    app:useSimpleSummaryProvider="true" />
                 <androidx.preference.SeekBarPreference
                     android:defaultValue="650"
                     android:icon="@drawable/ic_highlight_black_24dp"

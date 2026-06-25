@@ -66,6 +66,7 @@ public class HighlightingEditor extends AppCompatEditText {
     private final boolean _isSpellingRedUnderline;
     private SyntaxHighlighterBase _hl;
     private Runnable _hlDebounced;        // Debounced runnable which recomputes highlighting
+    private Runnable _selectionHlDebounced;
     private boolean _hlEnabled;           // Whether highlighting is enabled
     private final Rect _oldHlRect;        // Rect highlighting was previously applied to
     private final Rect _hlRect;           // Current rect
@@ -245,9 +246,17 @@ public class HighlightingEditor extends AppCompatEditText {
         if (_hl != null) {
             initHighlighter();
             _hlDebounced = TextViewUtils.makeDebounced(getHandler(), _hl.getHighlightingDelay(), this::recomputeHighlightingAsync);
+            if (_hl instanceof SelectionAwareHighlighter) {
+                final SelectionAwareHighlighter selectionAware = (SelectionAwareHighlighter) _hl;
+                selectionAware.updateSelection(getSelectionStart(), getSelectionEnd());
+                _selectionHlDebounced = TextViewUtils.makeDebounced(getHandler(), selectionAware.getSelectionUpdateDelay(), this::recomputeHighlightingAsync);
+            } else {
+                _selectionHlDebounced = null;
+            }
             recomputeHighlighting();
         } else {
             _hlDebounced = null;
+            _selectionHlDebounced = null;
         }
     }
 
@@ -497,6 +506,13 @@ public class HighlightingEditor extends AppCompatEditText {
         if (_staticCursorDrawer != null) {
             _staticCursorDrawer.notifySelectionChanged(selStart, selEnd);
         }
+
+        if (_hlEnabled && _hl instanceof SelectionAwareHighlighter && _selectionHlDebounced != null) {
+            final SelectionAwareHighlighter selectionAware = (SelectionAwareHighlighter) _hl;
+            if (selectionAware.updateSelection(selStart, selEnd)) {
+                _selectionHlDebounced.run();
+            }
+        }
     }
 
     public interface OnDispatchKeyListener {
@@ -508,6 +524,12 @@ public class HighlightingEditor extends AppCompatEditText {
          * @return {@code false} if the key press event was not be handled, {@code true} if it was consumed here.
          */
         boolean onDispatchKey(int keyCode, KeyEvent event);
+    }
+
+    public interface SelectionAwareHighlighter {
+        boolean updateSelection(int selStart, int selEnd);
+
+        int getSelectionUpdateDelay();
     }
 
     private OnDispatchKeyListener onDispatchKeyListener;

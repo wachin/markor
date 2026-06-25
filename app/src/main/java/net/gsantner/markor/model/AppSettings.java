@@ -54,6 +54,13 @@ import other.de.stanetz.jpencconverter.PasswordStore;
 
 @SuppressWarnings({"SameParameterValue", "WeakerAccess", "FieldCanBeLocal"})
 public class AppSettings extends GsSharedPreferencesPropertyBackend {
+    public static final int MARKDOWN_EDITING_MODE_SOURCE = 0;
+    public static final int MARKDOWN_EDITING_MODE_LIVE_PREVIEW = 1;
+    public static final int MARKDOWN_LIVE_PREVIEW_MARKERS_SHOW = 0;
+    public static final int MARKDOWN_LIVE_PREVIEW_MARKERS_DIM = 1;
+    public static final int MARKDOWN_LIVE_PREVIEW_MARKERS_HIDE = 2;
+    private static final int MARKDOWN_LIVE_PREVIEW_MAX_FILE_SIZE_BYTES = 180000;
+
     private final SharedPreferences _prefCache;
     private final SharedPreferences _prefHistory;
     public static Boolean _isDeviceGoodHardware = null;
@@ -185,6 +192,26 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
 
     public int getMarkdownHighlightingDelay() {
         return getInt(R.string.pref_key__markdown__hl_delay_v2, 650);
+    }
+
+    public int getMarkdownEditingMode() {
+        return getInt(R.string.pref_key__markdown__editing_mode, MARKDOWN_EDITING_MODE_LIVE_PREVIEW);
+    }
+
+    public boolean isMarkdownLivePreviewEnabled() {
+        return getMarkdownEditingMode() == MARKDOWN_EDITING_MODE_LIVE_PREVIEW;
+    }
+
+    public void setMarkdownLivePreviewEnabled(final boolean enabled) {
+        setInt(R.string.pref_key__markdown__editing_mode, enabled ? MARKDOWN_EDITING_MODE_LIVE_PREVIEW : MARKDOWN_EDITING_MODE_SOURCE);
+    }
+
+    public int getMarkdownLivePreviewSyntaxMarkersMode() {
+        return getInt(R.string.pref_key__markdown__live_preview_syntax_markers, MARKDOWN_LIVE_PREVIEW_MARKERS_DIM);
+    }
+
+    public boolean isMarkdownLivePreviewEligible(final @Nullable File file) {
+        return file == null || !file.isFile() || file.length() <= MARKDOWN_LIVE_PREVIEW_MAX_FILE_SIZE_BYTES;
     }
 
     public int getAsciidocHighlightingDelay() {

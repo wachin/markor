@@ -143,6 +143,24 @@
         <item translatable="false">@string/heading_5</item>
         <item translatable="false">@string/heading_6</item>
     </string-array>
+    <string-array name="pref_arrdisp__markdown_editing_mode" translatable="false">
+        <item translatable="false">@string/source_mode</item>
+        <item translatable="false">@string/live_preview</item>
+    </string-array>
+    <string-array name="pref_arrkeys__markdown_editing_mode" translatable="false">
+        <item translatable="false">0</item>
+        <item translatable="false">1</item>
+    </string-array>
+    <string-array name="pref_arrdisp__markdown_live_preview_syntax_markers" translatable="false">
+        <item translatable="false">@string/show</item>
+        <item translatable="false">@string/dim</item>
+        <item translatable="false">@string/hide_experimental</item>
+    </string-array>
+    <string-array name="pref_arrkeys__markdown_live_preview_syntax_markers" translatable="false">
+        <item translatable="false">0</item>
+        <item translatable="false">1</item>
+        <item translatable="false">2</item>
+    </string-array>
     <string-array name="arr_one_to_six" translatable="false">
         <item translatable="false">1</item>
         <item translatable="false">2</item>

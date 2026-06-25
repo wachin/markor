@@ -24,6 +24,7 @@ import net.gsantner.markor.format.csv.CsvTextConverter;
 import net.gsantner.markor.format.keyvalue.KeyValueSyntaxHighlighter;
 import net.gsantner.markor.format.keyvalue.KeyValueTextConverter;
 import net.gsantner.markor.format.markdown.MarkdownActionButtons;
+import net.gsantner.markor.format.markdown.MarkdownLivePreviewHighlighter;
 import net.gsantner.markor.format.markdown.MarkdownReplacePatternGenerator;
 import net.gsantner.markor.format.markdown.MarkdownSyntaxHighlighter;
 import net.gsantner.markor.format.markdown.MarkdownTextConverter;
@@ -196,7 +197,9 @@ public class FormatRegistry {
             case FORMAT_MARKDOWN: {
                 formatId = FORMAT_MARKDOWN;
                 format._converter = CONVERTER_MARKDOWN;
-                format._highlighter = new MarkdownSyntaxHighlighter(appSettings);
+                format._highlighter = appSettings.isMarkdownLivePreviewEnabled() && appSettings.isMarkdownLivePreviewEligible(document != null ? document.file : null)
+                        ? new MarkdownLivePreviewHighlighter(appSettings)
+                        : new MarkdownSyntaxHighlighter(appSettings);
                 format._textActions = new MarkdownActionButtons(context, document);
                 format._autoFormatInputFilter = new AutoTextFormatter(MarkdownReplacePatternGenerator.formatPatterns);
                 format._autoFormatTextWatcher = new ListHandler(MarkdownReplacePatternGenerator.formatPatterns);
