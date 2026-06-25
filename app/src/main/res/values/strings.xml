@@ -57,6 +57,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="live_preview">Live Preview</string>
     <string name="source_mode">Source mode</string>
     <string name="reading_preview">Reading preview</string>
+    <string name="markdown_editor_live_preview">Markdown editor: Live Preview</string>
+    <string name="markdown_editor_source_mode">Markdown editor: Source mode</string>
     <string name="live_preview_syntax_markers">Live Preview syntax markers</string>
     <string name="show">Show</string>
     <string name="dim">Dim</string>

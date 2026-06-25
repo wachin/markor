@@ -379,7 +379,10 @@ public class DocumentEditAndViewFragment extends MarkorBaseFragment implements F
         menu.findItem(R.id.submenu_tools).setVisible(isText);
         menu.findItem(R.id.submenu_per_file_settings).setVisible(isText);
         final boolean isMarkdown = _document.getFormat() == FormatRegistry.FORMAT_MARKDOWN;
-        menu.findItem(R.id.action_markdown_live_preview).setVisible(isText && isMarkdown && !_isPreviewVisible);
+        final MenuItem livePreviewMenuItem = menu.findItem(R.id.action_markdown_live_preview);
+        livePreviewMenuItem.setVisible(isText && isMarkdown && !_isPreviewVisible);
+        livePreviewMenuItem.setChecked(isMarkdown && _appSettings.isMarkdownLivePreviewEnabled());
+        livePreviewMenuItem.setTitle(isMarkdown && _appSettings.isMarkdownLivePreviewEnabled() ? R.string.markdown_editor_live_preview : R.string.markdown_editor_source_mode);
         menu.findItem(R.id.action_preview).setTitle(isMarkdown ? R.string.reading_preview : R.string.view_mode);
 
         menu.findItem(R.id.action_share_pdf).setVisible(true);
@@ -784,6 +787,9 @@ public class DocumentEditAndViewFragment extends MarkorBaseFragment implements F
         }
         _format = FormatRegistry.getFormat(textFormatId, activity, _document);
         _document.setFormat(_format.getFormatId());
+        if (_document.getFormat() == FormatRegistry.FORMAT_MARKDOWN && _format.getHighlighter() != null) {
+            Log.i(FRAGMENT_TAG, "Markdown editor highlighter: " + _format.getHighlighter().getClass().getSimpleName());
+        }
         _hlEditor.setHighlighter(_format.getHighlighter());
         _hlEditor.setAutoFormatters(_format.getAutoFormatInputFilter(), _format.getAutoFormatTextWatcher());
         _hlEditor.setAutoFormatEnabled(_appSettings.getDocumentAutoFormatEnabled(_document.path));
@@ -1024,6 +1030,7 @@ public class DocumentEditAndViewFragment extends MarkorBaseFragment implements F
             final boolean isMarkdown = _document != null && _document.getFormat() == FormatRegistry.FORMAT_MARKDOWN;
             mi.setVisible(isMarkdown && !_isPreviewVisible);
             mi.setChecked(isMarkdown && _appSettings.isMarkdownLivePreviewEnabled());
+            mi.setTitle(isMarkdown && _appSettings.isMarkdownLivePreviewEnabled() ? R.string.markdown_editor_live_preview : R.string.markdown_editor_source_mode);
         }
         if ((mi = _fragmentMenu.findItem(R.id.action_preview)) != null) {
             mi.setTitle(_document != null && _document.getFormat() == FormatRegistry.FORMAT_MARKDOWN ? R.string.reading_preview : R.string.view_mode);

@@ -33,9 +33,8 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
     private static final int COLOR_HEADING = 0xffef6d00;
     private static final int COLOR_LINK = 0xff1ea3fe;
     private static final int COLOR_TASK = 0xffdaa521;
-    private static final int COLOR_INLINE_CODE = 0x40afafaf;
+    private static final int COLOR_INLINE_CODE = 0x50afafaf;
 
-    private boolean _highlightCodeChangeFont;
     private boolean _highlightCodeBlock;
     private int _selectionStart;
     private int _selectionEnd;
@@ -48,7 +47,6 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
 
     @Override
     public SyntaxHighlighterBase configure(final Paint paint) {
-        _highlightCodeChangeFont = _appSettings.isHighlightCodeMonospaceFont();
         _highlightCodeBlock = _appSettings.isHighlightCodeBlock();
         _delay = Math.max(120, _appSettings.getMarkdownHighlightingDelay());
         _markerMode = _appSettings.getMarkdownLivePreviewSyntaxMarkersMode();
@@ -97,6 +95,7 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
             final boolean active = isLineActive(matcher.start(0), lineEnd);
 
             addSpanGroup(new HighlightSpan().setBold(true).setForeColor(COLOR_HEADING), textStart, lineEnd);
+            addSpanGroup(new HighlightSpan().setBackColor(adjustAlpha(COLOR_HEADING, _isDarkMode ? 0.14f : 0.08f)), textStart, lineEnd);
             addSpanGroup(new RelativeSizeSpan(getHeadingScale(level)), textStart, lineEnd);
             applyQuietMarker(markerStart, markerEnd, active);
         }
@@ -128,7 +127,7 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
             final int contentEnd = matcher.end(1);
             final boolean active = isActive(start, end);
 
-            addSpanGroup(new HighlightSpan().setBold(true), contentStart, contentEnd);
+            addSpanGroup(new HighlightSpan().setBold(true).setForeColor(adjustAlpha(_textColor, 1.0f)), contentStart, contentEnd);
             applyQuietMarker(start, contentStart, active);
             applyQuietMarker(contentEnd, end, active);
         }
@@ -146,7 +145,7 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
             }
 
             final boolean active = isActive(start, end);
-            addSpanGroup(new HighlightSpan().setItalic(true), contentStart, contentEnd);
+            addSpanGroup(new HighlightSpan().setItalic(true).setForeColor(adjustAlpha(_textColor, 0.96f)), contentStart, contentEnd);
             applyQuietMarker(start, contentStart, active);
             applyQuietMarker(contentEnd, end, active);
         }
@@ -177,9 +176,7 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
             final boolean active = isActive(start, end);
 
             addSpanGroup(new HighlightSpan().setBackColor(COLOR_INLINE_CODE), contentStart, contentEnd);
-            if (_highlightCodeChangeFont) {
-                addSpanGroup(new TypefaceSpan("monospace"), contentStart, contentEnd);
-            }
+            addSpanGroup(new TypefaceSpan("monospace"), contentStart, contentEnd);
             if (_highlightCodeBlock) {
                 addSpanGroup(new HighlightSpan().setForeColor(adjustAlpha(_textColor, 0.95f)), contentStart, contentEnd);
             }
@@ -229,15 +226,15 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
     private float getHeadingScale(final int level) {
         switch (level) {
             case 1:
-                return 1.45f;
+                return 1.85f;
             case 2:
-                return 1.32f;
+                return 1.6f;
             case 3:
-                return 1.2f;
+                return 1.35f;
             case 4:
-                return 1.1f;
+                return 1.18f;
             default:
-                return 1.0f;
+                return 1.08f;
         }
     }
 
@@ -249,7 +246,7 @@ public class MarkdownLivePreviewHighlighter extends SyntaxHighlighterBase implem
                 return _textColor;
             case AppSettings.MARKDOWN_LIVE_PREVIEW_MARKERS_DIM:
             default:
-                return adjustAlpha(_textColor, _isDarkMode ? 0.35f : 0.45f);
+                return adjustAlpha(_textColor, _isDarkMode ? 0.16f : 0.22f);
         }
     }
 

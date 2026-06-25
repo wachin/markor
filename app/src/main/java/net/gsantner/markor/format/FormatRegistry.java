@@ -10,6 +10,7 @@ package net.gsantner.markor.format;
 import android.content.Context;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -56,6 +57,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FormatRegistry {
+    private static final String TAG = "Markor.FormatRegistry";
     public static final int FORMAT_UNKNOWN = 0;
     public static final int FORMAT_WIKITEXT = R.string.action_format_wikitext;
     public static final int FORMAT_MARKDOWN = R.string.action_format_markdown;
@@ -197,9 +199,19 @@ public class FormatRegistry {
             case FORMAT_MARKDOWN: {
                 formatId = FORMAT_MARKDOWN;
                 format._converter = CONVERTER_MARKDOWN;
-                format._highlighter = appSettings.isMarkdownLivePreviewEnabled() && appSettings.isMarkdownLivePreviewEligible(document != null ? document.file : null)
-                        ? new MarkdownLivePreviewHighlighter(appSettings)
-                        : new MarkdownSyntaxHighlighter(appSettings);
+                final File file = document != null ? document.file : null;
+                final boolean livePreviewEnabled = appSettings.isMarkdownLivePreviewEnabled();
+                final boolean livePreviewEligible = appSettings.isMarkdownLivePreviewEligible(file);
+                if (livePreviewEnabled && livePreviewEligible) {
+                    format._highlighter = new MarkdownLivePreviewHighlighter(appSettings);
+                    Log.i(TAG, "Markdown open: using MarkdownLivePreviewHighlighter for " + describeFile(file));
+                } else {
+                    format._highlighter = new MarkdownSyntaxHighlighter(appSettings);
+                    final String reason = !livePreviewEnabled
+                            ? "setting disabled"
+                            : "file too large (" + (file != null && file.isFile() ? file.length() : -1) + " bytes)";
+                    Log.i(TAG, "Markdown open: using MarkdownSyntaxHighlighter for " + describeFile(file) + " because " + reason);
+                }
                 format._textActions = new MarkdownActionButtons(context, document);
                 format._autoFormatInputFilter = new AutoTextFormatter(MarkdownReplacePatternGenerator.formatPatterns);
                 format._autoFormatTextWatcher = new ListHandler(MarkdownReplacePatternGenerator.formatPatterns);
@@ -244,5 +256,9 @@ public class FormatRegistry {
     public static boolean isExternalFile(final File file) {
         final String ext = GsFileUtils.getFilenameExtension(file).toLowerCase();
         return EXTERNAL_FILE_EXTENSIONS.contains(ext);
+    }
+
+    private static String describeFile(final File file) {
+        return file != null ? file.getAbsolutePath() : "<no-file>";
     }
 }
